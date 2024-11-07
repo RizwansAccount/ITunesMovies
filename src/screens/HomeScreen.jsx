@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomScreen from '../components/CustomScreen'
 import CustomText from '../components/CustomText'
@@ -14,14 +14,24 @@ const HomeScreen = () => {
     
     const fnGetAllMovies =async()=>{
         const data = await fnGetApi();
-        setAllMovies(data);
+        setAllMovies(data?.results);
     };
 
     return (
         <CustomScreen>
             <CustomText>
-                HomeScreen
+                Movies
             </CustomText>
+            <FlatList
+                data={allMovies}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item })=>(
+                        <CustomText>
+                            {item?.shortDescription}
+                        </CustomText>
+                    )
+                }
+            />
         </CustomScreen>
     )
 }
