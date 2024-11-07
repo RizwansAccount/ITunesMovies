@@ -15,6 +15,6 @@ export default CustomText
 const styles = StyleSheet.create({
     textStyle: {
         color: themeStyles.BLACK_COLOR,
-        fontFamily : "Poppins-Bold"
+        fontFamily : themeStyles.FONT_REGULAR
     }
 })
