@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import CustomScreen from '../components/CustomScreen'
 import CustomText from '../components/CustomText'
 import useApiManager from '../customHooks/useApiManager'
+import globalStyles from '../styles/globalStyles'
 
 const HomeScreen = () => {
 
@@ -30,7 +31,7 @@ const HomeScreen = () => {
 
     return (
         <CustomScreen>
-            <CustomText> All Movies </CustomText>
+            <CustomText style={globalStyles.screen_title}> All Movies </CustomText>
             <FlatList
                 data={allMovies}
                 keyExtractor={(item, index) => index.toString()}
