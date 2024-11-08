@@ -7,7 +7,7 @@ const CustomInput = ({ placeholder = 'Search', style, onChangeText }) => {
         <TextInput
             onChangeText={onChangeText}
             placeholder={placeholder}
-            placeholderTextColor={themeStyles.BLACK_COLOR}
+            placeholderTextColor={themeStyles.GREY}
             style={[styles.input, style]}
         />
     )
@@ -17,6 +17,6 @@ export default CustomInput
 
 const styles = StyleSheet.create({
     input: {
-        borderWidth: 0.5, paddingLeft: 8, borderRadius: 4, color : themeStyles.BLACK_COLOR
+        borderWidth: 0.7, borderColor: themeStyles.GREY, paddingLeft: 8, borderRadius: 4, color : themeStyles.BLACK
     }
 })

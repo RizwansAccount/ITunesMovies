@@ -1,14 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React from 'react'
+import { useRoute } from '@react-navigation/native'
+import CustomScreen from '../components/CustomScreen';
+import CustomText from '../components/CustomText';
 
 const MovieDetailScreen = () => {
+
+  const route = useRoute();
+  const { detail } = route.params;
+
   return (
-    <View>
-      <Text>MovieDetailScreen</Text>
-    </View>
+    <CustomScreen backIcon={true}>
+      <CustomText>{detail?.artistName}</CustomText>
+    </CustomScreen>
   )
 }
 
 export default MovieDetailScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+})

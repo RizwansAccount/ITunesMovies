@@ -3,7 +3,7 @@ import themeStyles from "./themeStyles";
 
 const globalStyles = StyleSheet.create({
     screen_title : {
-        fontSize: 22, color : themeStyles.BLACK_COLOR, fontFamily: themeStyles.FONT_SEMI_BOLD
+        fontSize: 22, color : themeStyles.BLACK, fontFamily: themeStyles.FONT_SEMI_BOLD
     }
 });
 
