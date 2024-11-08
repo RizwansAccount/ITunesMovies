@@ -30,9 +30,7 @@ const HomeScreen = () => {
 
     return (
         <CustomScreen>
-            <CustomText>
-                All Movies
-            </CustomText>
+            <CustomText> All Movies </CustomText>
             <FlatList
                 data={allMovies}
                 keyExtractor={(item, index) => index.toString()}
