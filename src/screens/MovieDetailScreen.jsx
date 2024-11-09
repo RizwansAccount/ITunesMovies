@@ -1,4 +1,4 @@
-import { Image, Modal, StatusBar, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import CustomScreen from '../components/CustomScreen';
@@ -56,7 +56,7 @@ const MovieDetailScreen = () => {
 
       </View>
 
-      <Modal statusBarTranslucent={true}  visible={isModalVisible}>
+      <Modal statusBarTranslucent={true}  visible={isModalVisible} onDismiss={()=> setModalVisible(false)} >
         <View style={{height:'100%', width:'100%'}}>
         <TouchableOpacity style={styles.crossIcon} onPress={() => setModalVisible(false)}>
           <CustomIcon name={'cross'} type={ICON_TYPES.Entypo} size={32} color={themeStyles.WHITE} />
@@ -66,9 +66,7 @@ const MovieDetailScreen = () => {
           style={styles.video}
           controls
           resizeMode="cover"
-          controlsStyles={{
-            hideFullscreen : true
-          }}
+          controlsStyles={{ hideFullscreen : true }}
         />
         </View>
       </Modal>

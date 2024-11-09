@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 const CustomScreen = ({ children, style, addScroll = false, backIcon, onPressBackIcon = false }) => {
     const navigation = useNavigation();
     return (
-        addScroll ? <ScrollView>
+        addScroll ? <ScrollView keyboardShouldPersistTaps='always' >
             <View style={[styles.container, style]}>
                 {
                     backIcon && <TouchableOpacity onPress={() => { onPressBackIcon ? onPressBackIcon() : navigation.goBack() }} style={styles.backBtnBox}>

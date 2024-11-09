@@ -9,10 +9,14 @@ import ViewFavoriteCard from '../components/views/ViewFavoriteCard';
 import ViewMovieCard from '../components/views/ViewMovieCard';
 import CustomText from '../components/CustomText';
 import CustomIcon, { ICON_TYPES } from '../components/CustomIcon';
+import themeStyles from '../styles/themeStyles';
+import useLocalStorage from '../customHooks/useLocalStorage';
+import { KEYS, VIEWS_TYPES } from '../constants/Index';
 
 const HomeScreen = () => {
 
     const { isLoading, fnGetApi } = useApiManager();
+    const { fnSetStorage, fnGetStorage } = useLocalStorage();
     const favorites = useSelector(selectedFavoriteSelector);
 
     const isFavoritesExist = favorites?.length > 0;
@@ -20,11 +24,12 @@ const HomeScreen = () => {
     const [searchInput, setSearchInput] = useState("");
     const [allMovies, setAllMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
+    const [selectedViewStyle, setSelectedViewStyle] = useState("");
 
     const isSearchTxtExist = searchInput?.trim()?.length > 0;
     const isMoviesExist = isSearchTxtExist ? filteredMovies?.length > 0 : allMovies?.length > 0;
 
-    useEffect(() => { fnGetAllMovies() }, []);
+    useEffect(() => { fnGetAllMovies(); fnGetViewStyle() }, []);
 
     const fnGetAllMovies = async () => {
         const data = await fnGetApi();
@@ -36,8 +41,9 @@ const HomeScreen = () => {
         if (text?.trim()?.length > 0) {
             const filteredMovies = allMovies?.filter((x) => {
                 const input = text?.toLowerCase();
-                const movieTitle = x?.artistName?.toLowerCase();
-                return movieTitle?.includes(input);
+                const movieTitle = x?.trackCensoredName?.toLowerCase();
+                const artistName = x?.artistName?.toLowerCase();
+                return movieTitle?.includes(input) || artistName?.includes(input);
             });
             setFilteredMovies(filteredMovies);
         } else {
@@ -45,6 +51,20 @@ const HomeScreen = () => {
         }
     };
 
+    const fnOnClickViews = async (data) => {
+        await fnSetStorage(KEYS.view, data);
+        setSelectedViewStyle(data);
+    };
+
+    const fnGetViewStyle = async () => {
+        const data = await fnGetStorage(KEYS.view);
+        if (data) {
+            setSelectedViewStyle(data);
+        } else {
+            fnSetStorage(KEYS.view, VIEWS_TYPES.grid);
+            setSelectedViewStyle(VIEWS_TYPES.grid);
+        }
+    };
     return (
         <CustomScreen>
 
@@ -60,6 +80,16 @@ const HomeScreen = () => {
 
             <View>
                 <CustomInput placeholder='Search Movies' value={searchInput} style={{ marginBottom: 8 }} onChangeText={(text) => fnOnSearch(text)} />
+
+                <View style={styles.gridBox}>
+                    <TouchableOpacity style={[styles.gridIcon, selectedViewStyle === VIEWS_TYPES.grid && { backgroundColor: themeStyles.LIGHT_BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.grid)}>
+                        <CustomIcon size={24} name={'grid'} type={ICON_TYPES.Entypo} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.gridIcon, selectedViewStyle === VIEWS_TYPES.list && { backgroundColor: themeStyles.LIGHT_BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.list)}>
+                        <CustomIcon size={20} name={'list'} type={ICON_TYPES.FontAwesome} />
+                    </TouchableOpacity>
+                </View>
+
                 {isSearchTxtExist > 0 &&
                     <TouchableOpacity style={styles.crossIcon} onPress={() => setSearchInput("")}>
                         <CustomIcon
@@ -71,15 +101,31 @@ const HomeScreen = () => {
                 }
             </View>
             {
-                isMoviesExist ? <FlatList
-                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={false}
-                    columnWrapperStyle={styles.listColumn}
-                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} />}
-                /> :
-                    <View style={styles.loaderBox} >
+                isMoviesExist ?
+                    <>
+                        {
+                            selectedViewStyle === VIEWS_TYPES.grid ?
+                                <FlatList
+                                    key={'grid'}
+                                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
+                                    keyExtractor={(item, index) => index.toString()}
+                                    numColumns={2}
+                                    showsVerticalScrollIndicator={false}
+                                    columnWrapperStyle={styles.listColumn}
+                                    keyboardShouldPersistTaps='always'
+                                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.grid} />}
+                                />
+                                : <FlatList
+                                    key={'list'}
+                                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
+                                    style={{ marginTop: 16 }}
+                                    contentContainerStyle={{ gap: 8, paddingBottom: 16, }}
+                                    keyboardShouldPersistTaps='always'
+                                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.list} />}
+                                />
+                        }
+                    </>
+                    : <View style={styles.loaderBox} >
                         <CustomText>{'No Movies'}</CustomText>
                     </View>
             }
@@ -91,7 +137,19 @@ const HomeScreen = () => {
 export default HomeScreen
 
 const styles = StyleSheet.create({
-    listColumn: { justifyContent: 'flex-start', gap: 16, marginTop: 16 },
+    listColumn: { justifyContent: 'flex-start', gap: 8, marginVertical: 16 },
     loaderBox: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    crossIcon: { position: 'absolute', right: 8, bottom: 22 }
+    crossIcon: { position: 'absolute', right: 8, bottom: 62 },
+    gridBox: {
+        backgroundColor: themeStyles.WHITE,
+        alignSelf: 'flex-end',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        borderRadius: 4,
+        width: '20%',
+        height: 40,
+        elevation: 4
+    },
+    gridIcon: { flex: 1, alignItems: 'center', height: '100%', justifyContent: 'center', borderRadius: 4 }
 })

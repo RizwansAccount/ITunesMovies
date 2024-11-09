@@ -3,7 +3,7 @@ export default {
     WHITE : "#FFFFFF",
     GREY : "#7d7f7c",
     RED : "#FF0000",
-    LIGHT_BLUE : " #0000cd",
+    LIGHT_BLUE : "#ADD8E6",
     DIM_COLOR : "rgba(0,0,0,0.3)",
 
     FONT_BOLD:"Poppins-Bold",
