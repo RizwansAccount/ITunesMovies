@@ -4,31 +4,20 @@ import CustomText from '../CustomText';
 import CustomIcon, { ICON_TYPES } from '../CustomIcon';
 import themeStyles from '../../styles/themeStyles';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
-import { selectedFavoriteSelector } from '../../redux/FavoriteReducer';
-import { useDispatch } from 'react-redux';
-import { addToFavorites, removeFromFavorites } from '../../redux/FavoriteReducer';
 import { ROUTES } from '../../routes/RouteConstants';
+import useFavoriteManager from '../../customHooks/useFavoriteManager';
 
 const ViewMovieCard = ({item, index}) => {
 
-    const dispatch = useDispatch();
     const navigation = useNavigation();
-    const favorites = useSelector(selectedFavoriteSelector);
+
+    const { fnIsAlreadyInFavorite, fnAddOrRemoveFromFavorites } = useFavoriteManager();
 
     const movieId = index + 1;
-    const isAlreadyInFavorite = favorites?.find((item) => item?.id == movieId);
-
-    const fnAddOrRemoveFromFavorites = (item, id) => {
-        if (isAlreadyInFavorite) {
-            dispatch(removeFromFavorites(id));
-        } else {
-            dispatch(addToFavorites({ ...item, id: id }));
-        }
-    };
+    const isAlreadyInFavorite = fnIsAlreadyInFavorite(movieId);
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate(ROUTES.movie_detail, { detail: item })} activeOpacity={0.7} style={styles.listItemBox} >
+        <TouchableOpacity onPress={() => navigation.navigate(ROUTES.movie_detail, { detail: item, index })} activeOpacity={0.7} style={styles.listItemBox} >
             <Image source={{ uri: item?.artworkUrl100 }} style={styles.movieImg} />
             <CustomText>
                 {item?.artistName}
