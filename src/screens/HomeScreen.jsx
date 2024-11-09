@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CustomScreen from '../components/CustomScreen';
 import useApiManager from '../customHooks/useApiManager';
@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { selectedFavoriteSelector } from '../redux/FavoriteReducer';
 import ViewFavoriteCard from '../components/views/ViewFavoriteCard';
 import ViewMovieCard from '../components/views/ViewMovieCard';
+import CustomText from '../components/CustomText';
+import CustomIcon, { ICON_TYPES } from '../components/CustomIcon';
 
 const HomeScreen = () => {
 
@@ -18,6 +20,8 @@ const HomeScreen = () => {
     const [searchInput, setSearchInput] = useState("");
     const [allMovies, setAllMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
+
+    const isMoviesExist = searchInput?.trim()?.length > 0 ? filteredMovies?.length > 0 : allMovies?.length > 0;
 
     useEffect(() => { fnGetAllMovies() }, []);
 
@@ -43,25 +47,42 @@ const HomeScreen = () => {
     return (
         <CustomScreen>
 
-            {isFavoritesExist && <FlatList
-                data={favorites}
-                horizontal={true}
-                renderItem={ViewFavoriteCard}
-                style={{ height: '12%' }}
-                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 12}}
-                showsHorizontalScrollIndicator={false}
-            />}
+            {isFavoritesExist && <View style={{ paddingVertical: 10 }}>
+                <FlatList
+                    data={favorites}
+                    horizontal={true}
+                    renderItem={ViewFavoriteCard}
+                    style={{}}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 12 }}
+                    showsHorizontalScrollIndicator={false}
+                />
+            </View>}
 
-            <CustomInput placeholder='Search Movies' style={{ marginBottom: 8 }} onChangeText={(text) => fnOnSearch(text)} />
-
-            <FlatList
-                data={searchInput?.trim()?.length > 0 ? filteredMovies : allMovies}
-                keyExtractor={(item, index) => index.toString()}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                columnWrapperStyle={styles.listColumn}
-                renderItem={({item, index})=> <ViewMovieCard item={item} index={index} /> }
-            />
+            <View>
+                <CustomInput placeholder='Search Movies' value={searchInput} style={{ marginBottom: 8 }} onChangeText={(text) => fnOnSearch(text)} />
+                {searchInput?.trim()?.length > 0 &&
+                    <TouchableOpacity style={styles.crossIcon} onPress={() => setSearchInput("")}>
+                        <CustomIcon
+                            name={'cross'}
+                            type={ICON_TYPES.Entypo}
+                            size={22}
+                        />
+                    </TouchableOpacity>
+                }
+            </View>
+            {
+                isMoviesExist ? <FlatList
+                    data={searchInput?.trim()?.length > 0 ? filteredMovies : allMovies}
+                    keyExtractor={(item, index) => index.toString()}
+                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
+                    columnWrapperStyle={styles.listColumn}
+                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} />}
+                /> :
+                    <View style={styles.loaderBox} >
+                        <CustomText>{'No Movies'}</CustomText>
+                    </View>
+            }
 
         </CustomScreen>
     )
@@ -71,4 +92,6 @@ export default HomeScreen
 
 const styles = StyleSheet.create({
     listColumn: { justifyContent: 'flex-start', gap: 16, marginTop: 16 },
+    loaderBox: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    crossIcon: { position: 'absolute', right: 8, bottom: 22 }
 })
