@@ -1,4 +1,4 @@
-import { Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useRoute } from '@react-navigation/native'
 import CustomScreen from '../components/CustomScreen';
@@ -8,6 +8,7 @@ import CustomIcon, { ICON_TYPES } from '../components/CustomIcon';
 import themeStyles from '../styles/themeStyles';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation-locker';
+import CustomImage from '../components/CustomImage';
 
 const MovieDetailScreen = () => {
 
@@ -32,7 +33,7 @@ const MovieDetailScreen = () => {
       <View style={styles.movieContainer}>
 
         <View style={styles.imgBox}>
-          <Image source={{ uri: detail?.artworkUrl100 }} style={styles.img} />
+          <CustomImage source={{ uri: detail?.artworkUrl100 }} style={styles.img} />
           <TouchableOpacity onPress={() => fnAddOrRemoveFromFavorites(detail, movieId)} style={styles.heartBox}>
             <CustomIcon style={{ elevation: 5 }} color={isAlreadyInFavorite ? themeStyles.RED : themeStyles.WHITE} type={ICON_TYPES.AntDesign} name={'heart'} />
           </TouchableOpacity>

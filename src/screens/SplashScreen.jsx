@@ -1,8 +1,9 @@
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import CustomScreen from '../components/CustomScreen'
 import { useNavigation } from '@react-navigation/native'
 import { ROUTES } from '../routes/RouteConstants'
+import CustomImage from '../components/CustomImage'
 
 const SplashScreen = () => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const SplashScreen = () => {
 
   return (
     <CustomScreen style={styles.container}>
-        <Image style={styles.logo} source={require('../../assets/images/logo.png')} />
+        <CustomImage style={styles.logo} source={require('../../assets/images/logo.png')} />
     </CustomScreen>
   )
 }

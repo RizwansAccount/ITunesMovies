@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import CustomText from '../CustomText';
 import CustomIcon, { ICON_TYPES } from '../CustomIcon';
@@ -7,8 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 import { ROUTES } from '../../routes/RouteConstants';
 import useFavoriteManager from '../../customHooks/useFavoriteManager';
 import { VIEWS_TYPES } from '../../constants/Index';
+import CustomImage from '../CustomImage';
 
-const ViewMovieCard = ({ item, index, view }) => {
+const ViewMovieCard = ({ item, view }) => {
 
     const navigation = useNavigation();
 
@@ -25,13 +26,14 @@ const ViewMovieCard = ({ item, index, view }) => {
             activeOpacity={0.7}
             style={[styles.listItemBox, isListView && { maxWidth: '100%', flexDirection: 'row', gap: 8, paddingBottom: 0 }]}
         >
-            <Image
+
+            <CustomImage
                 source={{ uri: item?.artworkUrl100 }}
                 style={[styles.movieImg, isListView && { width: 100, height: 100, borderRadius: 0, borderBottomLeftRadius: 8, borderTopLeftRadius: 8 }]}
             />
 
-            <View style={[styles.contentBox, isListView && { alignItems: 'flex-start'}]}>
-                <CustomText numberOfLines={1} bold style={[styles.listTxt,{marginTop : 12}, isListView && { width: '65%', textAlign:'start' }]} center>
+            <View style={[styles.contentBox, isListView && { alignItems: 'flex-start' }]}>
+                <CustomText numberOfLines={1} bold style={[styles.listTxt, { marginTop: 12 }, isListView && { width: '65%', textAlign: 'start' }]} center>
                     {item?.trackCensoredName}
                 </CustomText>
                 <CustomText style={styles.listTxt} center>
@@ -54,7 +56,7 @@ export default ViewMovieCard
 const styles = StyleSheet.create({
     listItemBox: {
         flex: 1, alignItems: 'center', maxWidth: '49%', backgroundColor: themeStyles.WHITE, paddingBottom: 12, borderRadius: 8,
-        elevation: 5, marginHorizontal: 4, overflow:'hidden' 
+        elevation: 5, marginHorizontal: 4, overflow: 'hidden'
     },
     movieImg: { height: 220, width: '100%', borderRadius: 8 },
     heartBox: {
@@ -73,6 +75,6 @@ const styles = StyleSheet.create({
     },
     contentBox: {
         alignItems: 'center',
-        width:'100%',
+        width: '100%',
     }
 })
