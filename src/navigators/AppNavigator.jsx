@@ -6,12 +6,14 @@ import { ROUTES } from '../routes/RouteConstants'
 import HomeScreen from '../screens/HomeScreen'
 import FavoriteScreen from '../screens/FavoriteScreen'
 import MovieDetailScreen from '../screens/MovieDetailScreen'
+import SplashScreen from '../screens/SplashScreen'
 
 const AppNavigator = () => {
     const Stack = createStackNavigator();
   return (
     <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} >
+            <Stack.Screen name={ROUTES.splash} component={SplashScreen} />
             <Stack.Screen name={ROUTES.home} component={HomeScreen} />
             <Stack.Screen name={ROUTES.favorites} component={FavoriteScreen} />
             <Stack.Screen name={ROUTES.movie_detail} component={MovieDetailScreen} />
