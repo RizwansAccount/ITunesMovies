@@ -12,6 +12,7 @@ import CustomIcon, { ICON_TYPES } from '../components/CustomIcon';
 import themeStyles from '../styles/themeStyles';
 import useLocalStorage from '../customHooks/useLocalStorage';
 import { KEYS, VIEWS_TYPES } from '../constants/Index';
+import CustomAnimation from '../components/CustomAnimation';
 
 const HomeScreen = () => {
 
@@ -28,6 +29,8 @@ const HomeScreen = () => {
 
     const isSearchTxtExist = searchInput?.trim()?.length > 0;
     const isMoviesExist = isSearchTxtExist ? filteredMovies?.length > 0 : allMovies?.length > 0;
+    const isGridView = selectedViewStyle === VIEWS_TYPES.grid;
+    const isListView = selectedViewStyle === VIEWS_TYPES.list;
 
     useEffect(() => { fnGetAllMovies(); fnGetViewStyle() }, []);
 
@@ -72,7 +75,7 @@ const HomeScreen = () => {
                 <FlatList
                     data={favorites}
                     horizontal={true}
-                    renderItem={ViewFavoriteCard}
+                    renderItem={({item})=> <ViewFavoriteCard item={item} /> }
                     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 12 }}
                     showsHorizontalScrollIndicator={false}
                 />
@@ -82,11 +85,11 @@ const HomeScreen = () => {
                 <CustomInput placeholder='Search Movies' value={searchInput} style={{ marginBottom: 8 }} onChangeText={(text) => fnOnSearch(text)} />
 
                 <View style={styles.gridBox}>
-                    <TouchableOpacity style={[styles.gridIcon, selectedViewStyle === VIEWS_TYPES.grid && { backgroundColor: themeStyles.LIGHT_BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.grid)}>
-                        <CustomIcon size={24} name={'grid'} type={ICON_TYPES.Entypo} />
+                    <TouchableOpacity style={[styles.gridIcon, isGridView && { backgroundColor: themeStyles.BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.grid)}>
+                        <CustomIcon size={24} name={'grid'} color={isGridView ? themeStyles.WHITE : themeStyles.BLACK} type={ICON_TYPES.Entypo} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.gridIcon, selectedViewStyle === VIEWS_TYPES.list && { backgroundColor: themeStyles.LIGHT_BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.list)}>
-                        <CustomIcon size={20} name={'list'} type={ICON_TYPES.FontAwesome} />
+                    <TouchableOpacity style={[styles.gridIcon, isListView && { backgroundColor: themeStyles.BLUE }]} onPress={() => fnOnClickViews(VIEWS_TYPES.list)}>
+                        <CustomIcon size={20} name={'list'} color={isListView ? themeStyles.WHITE : themeStyles.BLACK} type={ICON_TYPES.FontAwesome} />
                     </TouchableOpacity>
                 </View>
 
@@ -101,33 +104,41 @@ const HomeScreen = () => {
                 }
             </View>
             {
-                isMoviesExist ?
-                    <>
+                isLoading ? <View style={styles.loaderBox}>
+                    <CustomAnimation source={require('../../assets/animations/loader.json')} />
+                </View> :
+                    <> 
                         {
-                            selectedViewStyle === VIEWS_TYPES.grid ?
-                                <FlatList
-                                    key={'grid'}
-                                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    numColumns={2}
-                                    showsVerticalScrollIndicator={false}
-                                    columnWrapperStyle={styles.listColumn}
-                                    keyboardShouldPersistTaps='always'
-                                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.grid} />}
-                                />
-                                : <FlatList
-                                    key={'list'}
-                                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
-                                    style={{ marginTop: 16 }}
-                                    contentContainerStyle={{ gap: 8, paddingBottom: 16, }}
-                                    keyboardShouldPersistTaps='always'
-                                    renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.list} />}
-                                />
+                            isMoviesExist ?
+                                <>
+                                    {
+                                        selectedViewStyle === VIEWS_TYPES.grid ?
+                                            <FlatList
+                                                key={'grid'}
+                                                data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                numColumns={2}
+                                                showsVerticalScrollIndicator={false}
+                                                style={{ marginTop: 16 }}
+                                                columnWrapperStyle={styles.listColumn}
+                                                keyboardShouldPersistTaps='always'
+                                                renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.grid} />}
+                                            />
+                                            : <FlatList
+                                                key={'list'}
+                                                data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
+                                                style={{ marginTop: 16 }}
+                                                contentContainerStyle={{ gap: 8, paddingBottom: 16, }}
+                                                keyboardShouldPersistTaps='always'
+                                                renderItem={({ item, index }) => <ViewMovieCard item={item} index={index} view={VIEWS_TYPES.list} />}
+                                            />
+                                    }
+                                </>
+                                : <View style={styles.loaderBox} >
+                                    <CustomAnimation style={{height : 200, width: 200}} source={require('../../assets/animations/empty_loader.json')} />
+                                </View>
                         }
                     </>
-                    : <View style={styles.loaderBox} >
-                        <CustomText>{'No Movies'}</CustomText>
-                    </View>
             }
 
         </CustomScreen>
@@ -137,8 +148,8 @@ const HomeScreen = () => {
 export default HomeScreen
 
 const styles = StyleSheet.create({
-    listColumn: { justifyContent: 'flex-start', gap: 8, marginVertical: 16 },
-    loaderBox: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    listColumn: { justifyContent: 'flex-start', gap: 8, paddingBottom: 16 },
+    loaderBox: { flex: 1, alignItems: 'center', justifyContent: 'center', marginBottom: 82 },
     crossIcon: { position: 'absolute', right: 8, bottom: 62 },
     gridBox: {
         backgroundColor: themeStyles.WHITE,

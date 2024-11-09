@@ -21,7 +21,7 @@ const ViewMovieCard = ({ item, index, view }) => {
 
     return (
         <TouchableOpacity
-            onPress={() => navigation.navigate(ROUTES.movie_detail, { detail: item, index })}
+            onPress={() => navigation.navigate(ROUTES.movie_detail, { detail: item })}
             activeOpacity={0.7}
             style={[styles.listItemBox, isListView && { maxWidth: '100%', flexDirection: 'row', gap: 8, paddingBottom: 0 }]}
         >
@@ -30,8 +30,8 @@ const ViewMovieCard = ({ item, index, view }) => {
                 style={[styles.movieImg, isListView && { width: 100, height: 100, borderRadius: 0, borderBottomLeftRadius: 8, borderTopLeftRadius: 8 }]}
             />
 
-            <View style={[styles.contentBox, isListView && { alignItems: 'flex-start' }]}>
-                <CustomText numberOfLines={1} bold style={[styles.listTxt, { marginTop: 8 }]} center>
+            <View style={[styles.contentBox, isListView && { alignItems: 'flex-start'}]}>
+                <CustomText numberOfLines={1} bold style={[styles.listTxt,{marginTop : 12}, isListView && { width: '65%', textAlign:'start' }]} center>
                     {item?.trackCensoredName}
                 </CustomText>
                 <CustomText style={styles.listTxt} center>
@@ -54,7 +54,7 @@ export default ViewMovieCard
 const styles = StyleSheet.create({
     listItemBox: {
         flex: 1, alignItems: 'center', maxWidth: '49%', backgroundColor: themeStyles.WHITE, paddingBottom: 12, borderRadius: 8,
-        elevation: 5, marginHorizontal: 4
+        elevation: 5, marginHorizontal: 4, overflow:'hidden' 
     },
     movieImg: { height: 220, width: '100%', borderRadius: 8 },
     heartBox: {
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     },
     contentBox: {
         alignItems: 'center',
-        paddingHorizontal: 4
+        width:'100%',
     }
 })

@@ -4,6 +4,7 @@ export default {
     GREY : "#7d7f7c",
     RED : "#FF0000",
     LIGHT_BLUE : "#ADD8E6",
+    BLUE : "#203F97",
     DIM_COLOR : "rgba(0,0,0,0.3)",
 
     FONT_BOLD:"Poppins-Bold",

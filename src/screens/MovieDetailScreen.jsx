@@ -14,8 +14,8 @@ const MovieDetailScreen = () => {
   const { fnAddOrRemoveFromFavorites, fnIsAlreadyInFavorite } = useFavoriteManager();
   const route = useRoute();
 
-  const { detail, index } = route.params;
-  const movieId = index + 1;
+  const { detail } = route.params;
+  const movieId = detail?.trackId;
 
   const isAlreadyInFavorite = fnIsAlreadyInFavorite(movieId);
 
@@ -41,7 +41,7 @@ const MovieDetailScreen = () => {
         <View style={styles.contentBox}>
 
           <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.watchMovieBox}>
-            <CustomText style={styles.watchMovieTxt}>{'Watch Movie'}</CustomText>
+            <CustomText style={styles.watchMovieTxt}>{'Watch Trailer'}</CustomText>
           </TouchableOpacity>
 
           <CustomText style={styles.movieName} bold>{detail?.trackCensoredName}</CustomText>
