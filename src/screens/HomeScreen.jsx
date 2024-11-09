@@ -21,7 +21,8 @@ const HomeScreen = () => {
     const [allMovies, setAllMovies] = useState([]);
     const [filteredMovies, setFilteredMovies] = useState([]);
 
-    const isMoviesExist = searchInput?.trim()?.length > 0 ? filteredMovies?.length > 0 : allMovies?.length > 0;
+    const isSearchTxtExist = searchInput?.trim()?.length > 0;
+    const isMoviesExist = isSearchTxtExist ? filteredMovies?.length > 0 : allMovies?.length > 0;
 
     useEffect(() => { fnGetAllMovies() }, []);
 
@@ -52,7 +53,6 @@ const HomeScreen = () => {
                     data={favorites}
                     horizontal={true}
                     renderItem={ViewFavoriteCard}
-                    style={{}}
                     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', gap: 12 }}
                     showsHorizontalScrollIndicator={false}
                 />
@@ -60,7 +60,7 @@ const HomeScreen = () => {
 
             <View>
                 <CustomInput placeholder='Search Movies' value={searchInput} style={{ marginBottom: 8 }} onChangeText={(text) => fnOnSearch(text)} />
-                {searchInput?.trim()?.length > 0 &&
+                {isSearchTxtExist > 0 &&
                     <TouchableOpacity style={styles.crossIcon} onPress={() => setSearchInput("")}>
                         <CustomIcon
                             name={'cross'}
@@ -72,7 +72,7 @@ const HomeScreen = () => {
             </View>
             {
                 isMoviesExist ? <FlatList
-                    data={searchInput?.trim()?.length > 0 ? filteredMovies : allMovies}
+                    data={isSearchTxtExist > 0 ? filteredMovies : allMovies}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
